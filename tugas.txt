@@ -1,0 +1,2 @@
+buat aplikasi sederhana dimana bisa menampilkan nama dan jabatan.
+081320100407
