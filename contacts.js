@@ -14,22 +14,10 @@ if (!fs.existsSync(dirPath)) {
   fs.mkdirSync(dirPath);
 }
 
-// if(!fs.existsSync(dataPath)){
-//     fs.writeFileSync(dataPath, '[]', 'utf-8');
-// }
-
 const dataPath = "data/contacts.json";
 if (!fs.existsSync(dataPath)) {
   fs.writeFileSync(dataPath, "[]", "utf-8");
 }
-
-// const tulisPertanyaan = (pertanyaan) => {
-//     return new Promise((resolve, reject)=>{
-//         rl.question(pertanyaan, (nama) =>{
-//             resolve(nama);
-//         });
-//     });
-// };
 
 const loadContact = () => {
   const fileBuffer = fs.readFileSync("data/contacts.json", "utf-8");
@@ -39,8 +27,6 @@ const loadContact = () => {
 
 const simpanContact = (nama, email, noHP) => {
   const contact = { nama, email, noHP };
-  // const fileBuffer = fs.readFileSync("data/contacts.json", "utf-8");
-  // const contacts = JSON.parse(fileBuffer);
   const contacts = loadContact();
 
   //cek duplikat
@@ -94,7 +80,7 @@ const detailContact = (nama) => {
     (contact) => contact.nama.toUpperCase() === nama.toUpperCase()
   );
 
-   //notifikasi jika data nama yang di edit tidak ketemu
+  //notifikasi jika data nama yang di edit tidak ketemu
   if (!contact) {
     console.log(chalk.red.inverse.bold(`${nama} tidak ditemukan!`));
     return false;
@@ -123,62 +109,81 @@ const deleteContact = (nama) => {
   //menyimpan semua data selain data yang dihapus
   fs.writeFileSync("data/contacts.json", JSON.stringify(newContacts));
   console.log(chalk.green.inverse.bold(`${nama} berhasil dihapus`));
-
 };
 
-const updateContact = (nama,email,noHP,namaedit) => {
-
+const updateContact = (nama, email, noHP, namaedit) => {
   const contacts = loadContact();
-  
-  //baca data yang selain yg di update
-  const datalain = contacts.filter(
-    (datalain) => datalain.nama.toUpperCase() !== namaedit.toUpperCase()
-  );
 
   //cari data nama yang sama
   const contact = contacts.find(
     (contact) => contact.nama.toUpperCase() === namaedit.toUpperCase()
   );
-  
+
   //notifikasi jika data nama yang di edit tidak ketemu
   if (!contact) {
     console.log(chalk.red.inverse.bold(`${nama} tidak ditemukan!`));
     return false;
   }
 
-  //menampilkan data yang di edit
-   console.log(chalk.yellow.inverse.bold(contact.nama));
-   console.log(chalk.yellow.inverse.bold(contact.noHP));
-  if (contact.email) {
-    console.log(chalk.yellow.inverse.bold(contact.email));
-  }
-  
-  const newHP = noHP; 
-  const newemail = email;
-  //cek data noHP yang di edit dengan data baru sama tidak
-  if(contact.noHP===noHP){
-    const noHP = (contact.noHP);   
-  }else{
-    const noHP = newHP;
+  //baca data yang selain yg di update
+  const datalain = contacts.filter(
+    (datalain) => datalain.nama.toUpperCase() !== namaedit.toUpperCase()
+  );
+
+  //cek penulisan email
+  if (email) {
+    if (!validator.isEmail(email)) {
+      console.log(chalk.red.inverse.bold("Email tidak valid!"));
+      return false;
+    }
   }
 
+  //cek penulisan noHP
+  if (noHP) {
+    if (!validator.isMobilePhone(noHP, "id-ID")) {
+      console.log(chalk.red.inverse.bold("noHP tidak valid!"));
+      return false;
+    }
+  }
+
+  //cek data noHP yang di edit dengan data baru sama tidak
+  if (contact.noHP === noHP) {
+    newnoHP = contact.noHP;
+  } else {
+    newnoHP = noHP;
+  }
   //cek data email yang di edit dengan data baru sama tidak
-  if(contact.email===email){
-    const email = (contact.email);
-  }else{
-    const email = newemail;  
+  if (contact.email === email) {
+    newemail = contact.email;
+  } else {
+    newemail = email;
   }
   //array value data baru
-  const newData = { nama,noHP,email };
+  const newData = { nama, newnoHP, newemail };
   //menyimpan data baru ke data yang sudah ada
   datalain.push(newData);
-  //menyimpan data lama selain yang di edit ke json
-  fs.writeFileSync("data/contacts.json", JSON.stringify(contacts));
+
+  //menampilkan data yang di edit
+  console.log(
+    chalk.red.inverse.bold(
+      `Data lama: ${contact.nama} - ${contact.noHP} - ${contact.email}`
+    )
+  );
+  console.log(
+    chalk.yellow.inverse.bold(`Data baru: ${nama} - ${newnoHP} - ${newemail}`)
+  );
+
   //menyimpan data baru dan data lama ke json
   fs.writeFileSync("data/contacts.json", JSON.stringify(datalain));
   //notifikasi jika edit berhasil
   console.log(chalk.green.inverse.bold("Update data berhasil!"));
 };
 
-module.exports = { simpanContact, listContact, detailContact, deleteContact, updateContact };
+module.exports = {
+  simpanContact,
+  listContact,
+  detailContact,
+  deleteContact,
+  updateContact,
+};
 //module.exports = { tulisPertanyaan, simpanContact };
