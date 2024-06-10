@@ -6,8 +6,10 @@ const port = 3000
 //membaca lokasi css berada 
 app.use('/css', express.static('css'));
 
+//buat array menu
 const arr  = { '/': './xindex.html', '/about': './xabout.html', '/portofolio': './xportofolio.html', '/blog': './xblog.html', '/kontak': './xkontak.html' };
 
+//tampilkan halaman sesuai request dari menu yang dipilih
 Object.entries(arr).forEach(([menu, halaman]) => {
   app.get(menu, (req, res) => {
     res.sendFile(halaman, { root: __dirname });
