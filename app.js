@@ -1,5 +1,13 @@
 const express = require("express");
 const app = express();
+const expressLayouts = require('express-ejs-layouts');
+
+//gunakan ejs
+app.set('view engine', 'ejs');
+// Set Templating Engine
+app.use(expressLayouts);
+app.set('layout', './layouts/main-layout');
+
 //port webserver yg digunakan
 const port = 3001;
 const fs = require("fs");
@@ -17,19 +25,12 @@ if (!fs.existsSync(dataPath)) {
   fs.writeFileSync(dataPath, "[]", "utf-8");
 }
 
-//gunakan ejs
-app.set("view engine", "ejs");
 
 //membaca lokasi css berada
 app.use("/css", express.static("css"));
 
 app.get("/", (req, res) => {
-  // res.sendFile("./"+ halaman + ".html", { root: __dirname });
-  const datakontak = loadContact();
-  res.render("index", {
-    title: "Halaman Home",
-    //datakontak,
-  });
+  res.render("index", { title: "Halaman Home" });
 });
 
 //array nama page
@@ -42,7 +43,7 @@ Object.entries(arr).forEach(([menu, halaman]) => {
 });
 
 app.get("/kontak/:nama", (req, res) => {
-
+  
   //baca files json
   const loadContact = () => {
     const fileBuffer = fs.readFileSync(`${data_json}`, "utf-8");
@@ -61,22 +62,24 @@ app.get("/kontak/:nama", (req, res) => {
   //jika data yang dicari tidak ada dijson
   if (!contact) {
     //akan mengirim data kosong
-    res.render("kontak", {
-      title: "Halaman Kontak",
-      nama: "",
-      email: "",
-      noHP: "",
-    });
+    nama= "";
+    email= "";
+    noHP= "";
+  }else{
+    nama= contact.nama;
+    email= contact.email;
+    noHP= contact.noHP;
+  }
     
-  } else {
+  // } else {
     //akan mengisim data sesuai yang ada di json
     res.render("kontak", {
       title: "Halaman Kontak",
-      nama: `${contact.nama}`,
-      email: `${contact.email}`,
-      noHP: `${contact.noHP}`,
+      nama: nama,
+      email: email,
+      noHP: noHP,
     });
-  }
+  //}
 });
 
 //menampilkan status 404 jika halaman tdk ditemukan
