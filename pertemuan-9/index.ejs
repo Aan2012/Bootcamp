@@ -1,0 +1,168 @@
+<h2>Data Kontak:</h2><hr>
+<button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addDataModal">
+  <i class="fas fa-plus"></i> Tambah Data
+</button>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th><center>No</center></th>
+      <th><center>Nama</center></th>
+      <th><center>No HP</center></th>
+      <th><center>Email</center></th>
+      <th><center>Aksi</center></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% $no=1 %>
+    <% datakontak.forEach((data) => { %>
+    <tr>
+      <td><center><%= $no %></center></td>
+      <td><%= data.nama %></td>
+      <td><%= data.noHP %></td>
+      <td><%= data.email %></td>
+      <td><center>
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#adddetailModal<%= data.nama.replace(/ /g, '') %>"><i class="fas fa-edit"></i> Detail</button>
+        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addeditModal<%= data.nama.replace(/ /g, '') %>"><i class="fas fa-edit"></i> Edit</button>
+        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#addhapusModal<%= data.nama.replace(/ /g, '') %>"><i class="fas fa-trash"></i> Hapus</button>
+      </center>
+          <!-- Detail Modal -->
+          <div class="modal fade" id="adddetailModal<%= data.nama.replace(/ /g, '') %>" tabindex="-1" aria-labelledby="addDataModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="addDataModalLabel">Detail Data</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <!-- form di sini -->
+                  <form>
+                    <div class="form-group">
+                      <label for="firstName">Nama</label>
+                      <input type="text" class="form-control" id="firstName" value="<%= data.nama %>" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label for="lastName">No HP</label>
+                      <input type="text" class="form-control" id="lastName" value="<%= data.noHP %>" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label for="username">Email</label>
+                      <input type="text" class="form-control" id="username" value="<%= data.email %>" readonly>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit Modal -->
+          <div class="modal fade" id="addeditModal<%= data.nama.replace(/ /g, '') %>" tabindex="-1" aria-labelledby="addDataModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="addDataModalLabel">Edit Data</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <!-- Isi form tambah data di sini -->
+                <form method="POST">
+                <div class="modal-body">
+                    <div class="form-group">
+                      <input type="hidden" class="form-control" id="firstName" name="editnama" value="<%= data.nama %>" placeholder="data Nama">
+                    </div>
+                    <div class="form-group">
+                      <label for="firstName">Nama</label>
+                      <input type="text" class="form-control" id="firstName" name="nama" value="<%= data.nama %>" placeholder="data Nama">
+                    </div>
+                    <div class="form-group">
+                      <label for="lastName">No HP</label>
+                      <input type="text" class="form-control" id="lastName" name="nohp" value="<%= data.noHP %>" placeholder="data no HP">
+                    </div>
+                    <div class="form-group">
+                      <label for="username">Email</label>
+                      <input type="email" class="form-control" id="username" name="email" value="<%= data.email %>" placeholder="data Email">
+                    </div>                  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+              </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit Modal -->
+          <div class="modal fade" id="addhapusModal<%= data.nama.replace(/ /g, '') %>" tabindex="-1" aria-labelledby="addDataModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header bg-danger">
+                  <h5 class="modal-title" id="addDataModalLabel">Edit Data</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <!-- Isi form tambah data di sini -->
+                <form method="POST">
+                <div class="modal-body">
+                    <div class="form-group">
+                      <input type="hidden" class="form-control" id="firstName" name="hapusnama" value="<%= data.nama %>" placeholder="data Nama">
+                    </div>
+                    <div class="form-group">
+                      <p>Yakin akan menghapus data ini?</p>
+                      <p><b><%= data.nama %></b></p>
+                    </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Hapus Data</button>
+                </div>
+              </form>
+              </div>
+            </div>
+          </div>
+
+      </td>
+    </tr>
+    <% $no++; }) %>
+  </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="addDataModal" tabindex="-1" aria-labelledby="addDataModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addDataModalLabel">Tambah Data</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST">
+      <div class="modal-body">
+        <!-- Isi form tambah data di sini -->
+          <div class="form-group">
+            <label for="firstName">Nama</label>
+            <input type="text" class="form-control" id="firstName" name="nama" placeholder="data Nama">
+          </div>
+          <div class="form-group">
+            <label for="lastName">No HP</label>
+            <input type="text" class="form-control" id="lastName" name="nohp" placeholder="data no HP">
+          </div>
+          <div class="form-group">
+            <label for="username">Email</label>
+            <input type="email" class="form-control" id="username" name="email" placeholder="data Email">
+          </div>
+       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
