@@ -81,7 +81,7 @@ const EmployeeForm = () => {
   const handleSubmit = (values) => {
     console.log(values);
     setSubmittedData(values);
-    // Lakukan aksi submit di sini, seperti mengirim data ke backend atau menghandle data lainnya
+    // submit mengirim data ke backend atau menghandle data lainnya
   };
 
   const Card = () => {
